@@ -4,7 +4,10 @@ import twilio from "twilio";
 import Call from "../models/call.js";
 import Event from "../models/event.js";
 
-const redisConnection = new Redis(process.env.REDIS_URI || "redis://127.0.0.1:6379");
+const redisConnection = new Redis(process.env.REDIS_URI as string, {
+  maxRetriesPerRequest: null,
+});
+
 const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 export const callWorker = new Worker("call-queue", async (job) => {

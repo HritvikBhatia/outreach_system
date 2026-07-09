@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const meetupSchema = new mongoose.Schema(
+const eventSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -36,6 +36,6 @@ const meetupSchema = new mongoose.Schema(
   }
 );
 
-const Meetup = mongoose.model("Meetup", meetupSchema);
+const Event = mongoose.model("Event", eventSchema);
 
-export default Meetup;
+export default Event;

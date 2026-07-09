@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const callSchema = new mongoose.Schema(
   {
-    meetupId: {
+    eventId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Meetup",
+      ref: "Event",
       required: true,
     },
 
