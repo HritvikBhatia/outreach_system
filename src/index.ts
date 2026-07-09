@@ -3,6 +3,7 @@ import "dotenv/config";
 import app from "./app.js";
 import { connectDB } from "./config/db.js";
 import "./queues/call.queue.js";
+import "./workers/call.worker.js";
 
 
 await connectDB();

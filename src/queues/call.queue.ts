@@ -30,3 +30,17 @@ redisConnection.on("error", (err) => {
 export const callQueue = new Queue("call-queue", {
   connection: redisConnection as any,
 });
+
+export async function addCallJobs(meetupId: string, contacts: any[]) {
+  const jobs = contacts.map((contact) => ({
+    name: "process-call",
+    data: { meetupId, contactId: contact._id, phone: contact.phone },
+    opts: {
+      attempts: 2,
+      backoff: { type: "exponential", delay: 5000 },
+    },
+  }));
+
+  await callQueue.addBulk(jobs);
+  console.log(`Added ${jobs.length} call jobs to the queue!`);
+}

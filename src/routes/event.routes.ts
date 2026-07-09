@@ -5,6 +5,7 @@ import {
   getEvent,
   getEvents,
   updateEvent,
+  startCallingWorkflow
 } from "../controllers/event.controller.js";
 
 import { validate } from "../middlewares/validate.js";
@@ -21,5 +22,7 @@ router.post("/", validate(createEventSchema), createEvent);
 router.put("/:id", updateEvent);
 
 router.delete("/:id", deleteEvent);
+
+router.post("/:id/start-calling", startCallingWorkflow);
 
 export default router;

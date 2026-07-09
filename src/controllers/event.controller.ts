@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import Event from "../models/event.js";
+import Call from "../models/call.js";
+import { addCallJobs } from "../queues/call.queue.js";
 
 export async function createEvent(req: Request, res: Response) {
   try {
@@ -93,5 +95,38 @@ export async function deleteEvent(req: Request, res: Response) {
     return res.status(500).json({
       message: "Failed to delete event",
     });
+  }
+}
+
+export async function startCallingWorkflow(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    
+    // Fetch the event and its contacts
+    const event = await Event.findById(id).populate("selectedContacts");
+    if (!event) return res.status(404).json({ message: "Event not found" });
+
+    // 1. Create 'Pending' Call records in MongoDB
+    const callRecords = event.selectedContacts.map((contact: any) => ({
+      meetupId: event._id,
+      contactId: contact._id,
+      status: "Pending",
+    }));
+    await Call.insertMany(callRecords);
+
+    // 2. Put the jobs onto the Redis Queue!
+    await addCallJobs(event._id.toString(), event.selectedContacts);
+
+    // 3. Mark the event as scheduled
+    event.status = "Scheduled";
+    await event.save();
+
+    return res.status(200).json({ 
+      message: "Calling workflow started successfully in the background!", 
+      callsQueued: callRecords.length 
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Failed to start workflow" });
   }
 }
