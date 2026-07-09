@@ -1,8 +1,8 @@
-import app from "./app.js";
-import dotenv from "dotenv";
-import { connectDB  } from "./config/db.js";
+import "dotenv/config"; 
 
-dotenv.config();
+import app from "./app.js";
+import { connectDB } from "./config/db.js";
+import "./queues/call.queue.js";
 
 
 await connectDB();
@@ -10,10 +10,9 @@ await connectDB();
 app.get("/", (req, res) => {
     res.json({
         msg: "hello"
-    })
-})
-
+    });
+});
 
 app.listen(3000, () => {
-    console.log("Server running on port 3000")
+    console.log("Server running on port 3000");
 });
