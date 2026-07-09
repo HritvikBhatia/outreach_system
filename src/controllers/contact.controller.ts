@@ -69,7 +69,7 @@ export async function updateContact(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
-    const contact = await await Contact.findByIdAndUpdate(id, req.body, {new: true});
+    const contact = await Contact.findByIdAndUpdate(id, req.body, {new: true});
 
     if (!contact) {
         return res.status(404).json({

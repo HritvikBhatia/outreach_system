@@ -8,7 +8,7 @@ const redisConnection = new Redis(process.env.REDIS_URI as string, {
   maxRetriesPerRequest: null,
 });
 
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+// const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 export const callWorker = new Worker("call-queue", async (job) => {
     const { meetupId, contactId, phone } = job.data;
@@ -37,11 +37,13 @@ export const callWorker = new Worker("call-queue", async (job) => {
     twiml.say("We didn't receive any input. Goodbye!"); // Fallback
 
     // Initiate the call
-    await twilioClient.calls.create({
-        twiml: twiml.toString(),
-        to: phone,
-        from: process.env.TWILIO_PHONE_NUMBER as any,
-    });
+    // await twilioClient.calls.create({
+    //     twiml: twiml.toString(),
+    //     to: phone,
+    //     from: process.env.TWILIO_PHONE_NUMBER as any,
+    // });
+    console.log(`📞 MOCK CALL: Ringing ${phone} for event "${event.title}"`);
+    console.log(`TwiML Payload would be:`, twiml.toString());
 
   }, { connection: redisConnection as any}
 );

@@ -112,6 +112,7 @@ export async function startCallingWorkflow(req: Request, res: Response) {
       contactId: contact._id,
       status: "Pending",
     }));
+    
     await Call.insertMany(callRecords);
 
     // 2. Put the jobs onto the Redis Queue!
